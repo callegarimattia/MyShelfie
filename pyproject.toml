@@ -1,0 +1,11 @@
+[project]
+name = "MyShelfie"
+version = "v0.1.0"
+description = "Python implementation of the Shelfie table-top game, published by Cranio Creations."
+authors = [
+    { name = "Mattia Callegari", email = "mattia.callegari@mail.polimi.it" },
+]
+dependencies = []
+requires-python = ">=3.12"
+readme = "README.md"
+license = { text = "MIT" }

@@ -6,6 +6,19 @@ authors = [
     { name = "Mattia Callegari", email = "mattia.callegari@mail.polimi.it" },
 ]
 dependencies = []
-requires-python = ">=3.12"
+requires-python = ">=3.11"
 readme = "README.md"
 license = { text = "MIT" }
+
+[project.optional-dependencies]
+tests = [
+    'pytest >= 7.4.3',
+    "coverage>=7.3.2",
+    "pytest-cov>=4.1.0",
+    "setuptools>=69.0.2",
+]
+
+[tool.pytest.ini_options]
+minversion = "6.0"
+addopts = "--cov=. --cov-report=xml --cov-report=html --cov-fail-under=100 --cov-branch"
+testpaths = ["tests", "integration"]

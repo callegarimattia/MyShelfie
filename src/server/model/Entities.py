@@ -9,7 +9,7 @@ class Tile(Enum):
     BOOKS = 1
     GAMES = 2
     FRAMES = 3
-    THROPIES = 4
+    THROPHIES = 4
     PLANTS = 5
 
     def __str__(self):
@@ -32,7 +32,7 @@ class Bag:
         return str(self.tiles)
 
     def draw(self):
-        """Draw a random tile from the bag."""
+        """Draw a tile from the bag."""
         return self.tiles.pop()
 
 
@@ -69,11 +69,18 @@ class Board:
 
     def __init__(self):
         """Initialize the board."""
+        self.rows = 9
+        self.cols = 9
         self.board: list[list[Tile | None]] = [
-            [None for _ in range(9)] for _ in range(9)
+            [None for _ in range(self.rows)] for _ in range(self.cols)
         ]
         self.number_of_players: int = 0
         self.bag = Bag()
+        self.common_goals: list[CommonGoal] = []
+
+    def __str__(self):
+        """Return a string representation of the board."""
+        return str(self.board)
 
 
 class Shelf:
@@ -91,16 +98,16 @@ class Shelf:
         """Return a string representation of the shelf."""
         return str(self.shelf)
 
-    def add(self, tile: Tile, column: int):
+    def add(self, tiles: list[Tile], column: int):
         """
-        Add a tile to the column of the shelf.
+        Add the given tiles to the column of the shelf.
         Simulate gravity.
         """
-        if self.is_column_full(column):
-            raise Exception("Column is full")
+        if self.get_available_spaces()[column] < len(tiles):
+            raise Exception("")
         for row in range(self.height):
             if self.shelf[column][row] is None:
-                self.shelf[column][row] = tile
+                self.shelf[column][row] = tiles
                 return
 
     def is_column_full(self, column: int):
@@ -116,3 +123,36 @@ class Shelf:
     def get_available_spaces(self):
         """Return a list of number of available spaces in each column."""
         return [column.count(None) for column in self.shelf]
+
+
+class Player:
+    """Class for the player."""
+
+    def __init__(self, name: str, board: Board):
+        """Initialize the player."""
+        self.name: str = name
+        self.personal_goals: PersonalGoal = None
+        self.shelf: Shelf = Shelf()
+        self.score: int = 0
+
+    def __str__(self):
+        """Return a string representation of the player."""
+        return f"{self.name}: {self.personal_goals}"
+
+    def init_personal_goal(self, personal_goal: PersonalGoal):
+        """Initialize the personal goal of the player."""
+        if self.personal_goals is not None:
+            raise Exception("Player already has a personal goal")
+        self.personal_goals = personal_goal
+
+    def is_shelf_full(self) -> bool:
+        """Return whether the shelf is full."""
+        return self.shelf.is_full()
+
+    def get_available_spaces(self) -> list[int]:
+        """Return a list of number of available spaces in each column."""
+        return self.shelf.get_available_spaces()
+
+    def put_tiles_on_shelf(self, tiles: list[Tile], column: int):
+        """Put tiles on the shelf."""
+        self.shelf.add(tiles, column)
